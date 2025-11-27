@@ -12,9 +12,9 @@ import { TypeBadgeComponent } from '../shared/type-badge.component';
     <div class="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border border-white/40 overflow-hidden h-full"
          (click)="select.emit(pokemon)">
       <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 opacity-50 z-0 group-hover:scale-150 transition-transform duration-500"></div>
-      <span class="absolute top-3 left-4 text-xs font-black text-gray-300 z-10">#{{pokemon.id | number:'3.0-0'}}</span>
+      <span class="absolute top-3 left-4 text-xs font-black text-gray-800 z-10">#{{pokemon.id | number:'3.0-0'}}</span>
       <button (click)="$event.stopPropagation(); toggleCompare.emit(pokemon)" 
-              class="absolute top-2 right-2 z-20 p-1.5 rounded-full hover:bg-gray-100 text-gray-300 hover:text-indigo-600 transition-colors"
+              class="absolute top-2 right-2 z-20 p-1.5 rounded-full hover:bg-gray-100 text-gray-800 hover:text-indigo-600 transition-colors"
               [class.text-indigo-600]="isComparing"
               [class.bg-indigo-50]="isComparing">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -37,7 +37,7 @@ import { TypeBadgeComponent } from '../shared/type-badge.component';
   `
 })
 export class PokemonCardComponent {
-  @Input({required: true}) pokemon!: Pokemon;
+  @Input({ required: true }) pokemon!: Pokemon;
   @Input() isComparing = false;
   @Output() select = new EventEmitter<Pokemon>();
   @Output() toggleCompare = new EventEmitter<Pokemon>();
