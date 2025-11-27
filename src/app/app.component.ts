@@ -139,41 +139,68 @@ import { PokemonDetailComponent } from '../components/pokemon-detail/pokemon-det
         </div>
 
         <div *ngIf="viewState === 'compare'" class="animate-fade-in">
-           <button (click)="viewState = 'list'" class="mb-6 flex items-center gap-2 px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-all font-medium w-fit">
-            <span>← Back to List</span>
-          </button>
+    <button (click)="viewState = 'list'" class="mb-6 flex items-center gap-2 px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-all font-medium w-fit">
+        <span>← Back to List</span>
+    </button>
 
-          <div class="bg-white/95 backdrop-blur rounded-2xl shadow-xl p-6 sm:p-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Comparison Arena</h2>
-            
-            <div *ngIf="compareList.length < 2" class="text-center py-10 text-gray-500">
-              <p>Select at least 2 Pokemon from the list to compare them.</p>
+    <div class="relative mb-6 mx-auto w-full max-w-sm" (click)="$event.stopPropagation()">
+        <input 
+            type="text" 
+            [(ngModel)]="compareSearchQuery" 
+            (input)="onCompareSearchInput()"
+            (focus)="showCompareSearchResults = true"
+            placeholder="Add Pokemon to Compare..."
+            class="pl-9 pr-4 py-2 rounded-xl bg-white/90 border-2 border-gray-300 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-base w-full shadow-md"
+        >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        
+        <div *ngIf="showCompareSearchResults && compareSearchResults.length > 0" 
+             class="absolute top-full mt-2 left-0 w-full max-h-60 overflow-y-auto bg-white text-gray-800 rounded-xl shadow-xl border border-gray-100 z-50">
+            <div *ngFor="let res of compareSearchResults" 
+                 (mousedown)="selectCompareSearch(res)"
+                 class="px-4 py-2 hover:bg-gray-100 cursor-pointer capitalize text-sm flex justify-between items-center border-b border-gray-50 last:border-0">
+                <span>{{res.name}}</span>
+                <span class="text-xs text-gray-400">Add</span>
             </div>
+        </div>
+        <div *ngIf="showCompareSearchResults && compareSearchQuery.length > 0 && compareSearchResults.length === 0"
+             class="absolute top-full mt-2 left-0 w-full p-3 bg-white text-gray-800 rounded-xl shadow-xl border border-gray-100 z-50 text-sm text-center text-gray-500">
+            No results found.
+        </div>
+    </div>
+    <div class="bg-white/95 backdrop-blur rounded-2xl shadow-xl p-6 sm:p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Comparison Arena</h2>
+        
+        <div *ngIf="compareList.length < 2" class="text-center py-10 text-gray-500">
+            <p>Select at least 2 Pokemon from the list or use the search bar above to compare them.</p>
+        </div>
 
-            <div *ngIf="compareList.length >= 1" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div *ngFor="let mon of compareList" class="relative">
-                 <button (click)="toggleCompare(mon)" class="absolute top-0 right-0 text-red-400 hover:text-red-600">
-                   <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                 </button>
-                 <div class="flex flex-col items-center mb-6">
+        <div *ngIf="compareList.length >= 1" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div *ngFor="let mon of compareList" class="relative">
+                <button (click)="toggleCompare(mon)" class="absolute top-0 right-0 text-red-400 hover:text-red-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+                <div class="flex flex-col items-center mb-6">
                     <img [src]="themeService.getSpriteUrl(mon)" class="h-32 w-32 object-contain" style="image-rendering: pixelated">
                     <h3 class="text-xl font-bold capitalize mt-2">{{mon.name}}</h3>
-                 </div>
-                 <div class="space-y-3">
+                </div>
+                <div class="space-y-3">
                     <div *ngFor="let stat of mon.stats">
-                      <div class="flex justify-between text-xs mb-1">
-                        <span class="font-bold text-gray-500 uppercase">{{stat.stat.name}}</span>
-                        <span class="font-bold">{{stat.base_stat}}</span>
-                      </div>
-                      <div class="h-2 bg-gray-200 rounded-full">
-                         <div class="h-full rounded-full" [style.width.%]="(stat.base_stat / 255) * 100" [style.backgroundColor]="themeService.getSpriteUrl(mon).includes('shiny') ? 'gold' : '#06b6d4'"></div>
-                      </div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="font-bold text-gray-500 uppercase">{{stat.stat.name}}</span>
+                            <span class="font-bold">{{stat.base_stat}}</span>
+                        </div>
+                        <div class="h-2 bg-gray-200 rounded-full">
+                            <div class="h-full rounded-full" [style.width.%]="(stat.base_stat / 255) * 100" [style.backgroundColor]="themeService.getSpriteUrl(mon).includes('shiny') ? 'gold' : '#06b6d4'"></div>
+                        </div>
                     </div>
-                 </div>
-              </div>
+                </div>
             </div>
-          </div>
         </div>
+    </div>
+</div>
 
       </main>
     </div>
@@ -197,11 +224,11 @@ export class App implements OnInit {
   viewState: 'list' | 'detail' | 'compare' = 'list';
   visiblePokemon: Pokemon[] = [];
   compareList: Pokemon[] = [];
-  
+
   selectedPokemon: Pokemon | null = null;
   selectedFlavorText = 'Loading...';
   selectedEvolutionUrl: string | null = null;
-  
+
   loading = true;
   loadingMore = false;
   nextUrl: string | null = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=50';
@@ -209,19 +236,25 @@ export class App implements OnInit {
   searchQuery = '';
   searchResults: NamedAPIResource[] = [];
   showSearchResults = false;
+
+  compareSearchQuery = '';
+  compareSearchResults: NamedAPIResource[] = [];
+  showCompareSearchResults = false;
+
   showSettings = false;
 
-  themes: {id: ThemeColor, name: string, bgClass: string}[] = [
+  themes: { id: ThemeColor, name: string, bgClass: string }[] = [
     { id: 'classic', name: 'Pokedex Red', bgClass: 'bg-red-600' },
     { id: 'dark', name: 'Dark Mode', bgClass: 'bg-gray-900' },
     { id: 'gameboy', name: 'GameBoy', bgClass: 'bg-green-800' },
     { id: 'water', name: 'Ocean Blue', bgClass: 'bg-blue-500' }
   ];
 
-  spriteModes: {id: SpriteMode, name: string}[] = [
+  spriteModes: { id: SpriteMode, name: string }[] = [
     { id: 'official', name: 'Modern Art' },
     { id: 'gen1', name: 'Gen 1 (Pixel)' },
     { id: 'gen3', name: 'Gen 3 (GBA)' },
+    { id: 'gen4', name: 'Gen 4 (NDS)' },
     { id: 'gen5-anim', name: 'Gen 5 (Anim)' },
     { id: 'home', name: '3D Home' }
   ];
@@ -262,6 +295,43 @@ export class App implements OnInit {
     this.searchResults = this.dataService.allPokemonCache()
       .filter(p => p.name.includes(q))
       .slice(0, 10);
+  }
+
+  onCompareSearchInput() {
+    const q = this.compareSearchQuery.toLowerCase().trim();
+    if (!q) {
+      this.compareSearchResults = [];
+      return;
+    }
+    // Re-use the existing allPokemonCache
+    this.compareSearchResults = this.dataService.allPokemonCache()
+      .filter(p => p.name.includes(q))
+      .slice(0, 10);
+  }
+
+  selectCompareSearch(res: NamedAPIResource) {
+    this.compareSearchQuery = '';
+    this.showCompareSearchResults = false;
+
+    // Fetch the selected Pokemon details
+    this.dataService.fetchPokemonDetails(res.name).subscribe({
+      next: (pokemon) => {
+        // Add the selected Pokemon to the comparison list
+        // This logic ensures we don't add duplicates and respects the limit
+        if (!this.isInCompare(pokemon.id)) {
+          if (this.compareList.length >= 2) {
+            // Replace the oldest (first) one if the list is full (assuming you only want to compare two at a time or the user wants to swap one out)
+            // If you allow more than 2, change the logic here
+            this.compareList = [this.compareList[1], pokemon];
+          } else {
+            this.compareList.push(pokemon);
+          }
+        }
+      },
+      error: (err) => {
+        console.error("Could not load Pokemon for comparison", err);
+      }
+    });
   }
 
   selectGlobalSearch(res: NamedAPIResource) {

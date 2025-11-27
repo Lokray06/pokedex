@@ -45,4 +45,4 @@ export interface EvolutionStep {
 }
 
 export type ThemeColor = 'classic' | 'dark' | 'gameboy' | 'water';
-export type SpriteMode = 'official' | 'gen1' | 'gen3' | 'gen5-anim' | 'home';
+export type SpriteMode = 'official' | 'gen1' | 'gen3' | 'gen4' | 'gen5-anim' | 'home';
