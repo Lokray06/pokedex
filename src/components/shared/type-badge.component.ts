@@ -15,6 +15,7 @@ import { TypeService } from '../../app/services/type.service';
 })
 export class TypeBadgeComponent {
   @Input({required: true}) type!: string;
+  @Input() size!: string;
   typeService = inject(TypeService);
   color = computed(() => this.typeService.getColor(this.type));
 }

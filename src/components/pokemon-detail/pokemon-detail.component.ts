@@ -29,8 +29,8 @@ import { EvolutionChainComponent } from '../evolution-chain/evolution-chain.comp
 
 			<div class="relative h-48 sm:h-64 flex flex-col items-center justify-center p-6" 
 				[style.background]="getGradient()">
-				<h1 class="absolute top-4 left-6 text-4xl sm:text-6xl font-black text-white/20 z-0 uppercase select-none">{{pokemon.name}}</h1>
-				<span class="absolute top-6 right-6 text-2xl font-bold text-white/80">#{{pokemon.id | number:'3.0-0'}}</span>
+				<h1 class="absolute top-4 left-6 text-4xl sm:text-6xl font-black text-white/50 z-0 uppercase select-none">{{pokemon.name}}</h1>
+				<span class="absolute top-6 right-6 text-2xl font-bold text-black/40">#{{pokemon.id | number:'3.0-0'}}</span>
 				
 				<!-- Main Sprite Image, now using getCurrentSpriteUrl() -->
 				<img [src]="getCurrentSpriteUrl()" 
@@ -38,7 +38,7 @@ import { EvolutionChainComponent } from '../evolution-chain/evolution-chain.comp
 					style="image-rendering: pixelated;">
 
 				<!-- Sprite Controls Section -->
-				<div class="absolute bottom-4 z-20 flex gap-4 items-center bg-white/30 backdrop-blur-md p-2 rounded-full shadow-lg border border-white/40">
+				<div class="absolute bottom-4 z-20 flex gap-4 left-4 items-center bg-white/30 backdrop-blur-md p-2 rounded-full shadow-lg border border-white/40">
 					
 					<!-- Gender Toggle -->
 					<div *ngIf="hasFemaleSprite" class="flex gap-1 p-1 bg-white/50 rounded-full border border-white/20">
